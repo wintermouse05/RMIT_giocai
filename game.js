@@ -163,6 +163,8 @@ const videoGames = [
     title: "Celebrity Interview",
     description: "A famous actor discussing their new movie",
     emoji: "🎬",
+    videoSrc: "src/video/deepfake-footage.mp4",
+    videoType: "video/mp4",
     isDeepfake: true,
     hints: [
       "Unnatural lip-sync",
@@ -176,6 +178,8 @@ const videoGames = [
     title: "News Report",
     description: "Breaking news from a major news outlet",
     emoji: "📺",
+    videoSrc: "src/video/real-footage.mp4",
+    videoType: "video/mp4",
     isDeepfake: false,
     hints: [
       "Professional production quality",
@@ -189,6 +193,8 @@ const videoGames = [
     title: "Political Statement",
     description: "A politician making an announcement",
     emoji: "🎤",
+    videoSrc: "src/video/deepfake-footage.mp4",
+    videoType: "video/mp4",
     isDeepfake: true,
     hints: [
       "Slightly blurry around edges",
@@ -202,6 +208,8 @@ const videoGames = [
     title: "Tutorial Video",
     description: "A tech expert explaining a new feature",
     emoji: "💻",
+    videoSrc: "src/video/real-footage.mp4",
+    videoType: "video/mp4",
     isDeepfake: false,
     hints: ["Clear and natural movements", "Professional setup", "Consistent quality throughout", "Authentic content"],
   },
@@ -356,10 +364,18 @@ function renderPhoneGame() {
 
 function renderVideoGame() {
   const video = videoGames[gameState.currentQuestion]
+  const hasVideo = Boolean(video.videoSrc)
   return `
         <div class="video-container">
             <div class="video-display" id="videoDisplay" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
-                <div class="video-placeholder">${video.emoji}</div>
+                ${
+                  hasVideo
+                    ? `<video class="video-player" controls preload="metadata" playsinline>
+                            <source src="${video.videoSrc}" type="${video.videoType || "video/mp4"}">
+                            Your browser does not support the video tag.
+                       </video>`
+                    : `<div class="video-placeholder">${video.emoji}</div>`
+                }
             </div>
             <div class="video-info">
                 <div class="video-title">${video.title}</div>
