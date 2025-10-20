@@ -8,7 +8,7 @@ const gameState = {
   answers: [],
   touchStartX: 0,
   touchEndX: 0,
-}
+};
 
 // Game Data
 const emailGames = [
@@ -68,7 +68,7 @@ const emailGames = [
       "Professional tone",
     ],
   },
-]
+];
 
 const phoneGames = [
   {
@@ -104,7 +104,10 @@ const phoneGames = [
     conversation: [
       { type: "incoming", text: "Hi honey, how are you doing?" },
       { type: "outgoing", text: "Hi Mom! I'm doing well, how about you?" },
-      { type: "incoming", text: "Good! Just wanted to check in. Are you coming to dinner on Sunday?" },
+      {
+        type: "incoming",
+        text: "Good! Just wanted to check in. Are you coming to dinner on Sunday?",
+      },
       { type: "outgoing", text: "Yes, I'll be there!" },
     ],
     isPhishing: false,
@@ -121,7 +124,10 @@ const phoneGames = [
     phoneNumber: "+1 (800) 555-0199",
     callerInfo: "Caller ID shows government number",
     conversation: [
-      { type: "incoming", text: "This is the IRS. We have detected tax fraud on your account." },
+      {
+        type: "incoming",
+        text: "This is the IRS. We have detected tax fraud on your account.",
+      },
       { type: "outgoing", text: "What? I don't think that's right." },
       {
         type: "incoming",
@@ -143,7 +149,10 @@ const phoneGames = [
     phoneNumber: "+1 (555) 234-5678",
     callerInfo: "Local restaurant",
     conversation: [
-      { type: "incoming", text: "Hi, this is Pizza Palace. Your order is ready for pickup!" },
+      {
+        type: "incoming",
+        text: "Hi, this is Pizza Palace. Your order is ready for pickup!",
+      },
       { type: "outgoing", text: "Great! I'll be there in 10 minutes." },
       { type: "incoming", text: "Perfect! See you soon." },
     ],
@@ -155,7 +164,7 @@ const phoneGames = [
       "Expected call about your order",
     ],
   },
-]
+];
 
 const videoGames = [
   {
@@ -211,23 +220,28 @@ const videoGames = [
     videoSrc: "src/video/real-footage.mp4",
     videoType: "video/mp4",
     isDeepfake: false,
-    hints: ["Clear and natural movements", "Professional setup", "Consistent quality throughout", "Authentic content"],
+    hints: [
+      "Clear and natural movements",
+      "Professional setup",
+      "Consistent quality throughout",
+      "Authentic content",
+    ],
   },
-]
+];
 
 // Render Functions
 function render() {
-  const app = document.getElementById("app")
+  const app = document.getElementById("app");
 
   if (gameState.currentScreen === "menu") {
-    app.innerHTML = renderMenu()
+    app.innerHTML = renderMenu();
   } else if (gameState.currentScreen === "game") {
-    app.innerHTML = renderGame()
+    app.innerHTML = renderGame();
   } else if (gameState.currentScreen === "results") {
-    app.innerHTML = renderResults()
+    app.innerHTML = renderResults();
   }
 
-  attachEventListeners()
+  attachEventListeners();
 }
 
 function renderMenu() {
@@ -237,7 +251,9 @@ function renderMenu() {
             <div class="score-display">
                 <div class="score-item">
                     <div class="score-label">Total Score</div>
-                    <div class="score-value">${gameState.score}/${gameState.totalAnswered || 0}</div>
+                    <div class="score-value">${gameState.score}/${
+    gameState.totalAnswered || 0
+  }</div>
                 </div>
             </div>
         </div>
@@ -264,18 +280,18 @@ function renderMenu() {
                 </div>
             </div>
         </div>
-    `
+    `;
 }
 
 function renderGame() {
-  let content = ""
+  let content = "";
 
   if (gameState.currentGame === "email") {
-    content = renderEmailGame()
+    content = renderEmailGame();
   } else if (gameState.currentGame === "phone") {
-    content = renderPhoneGame()
+    content = renderPhoneGame();
   } else if (gameState.currentGame === "video") {
-    content = renderVideoGame()
+    content = renderVideoGame();
   }
 
   return `
@@ -284,8 +300,13 @@ function renderGame() {
             <div class="score-display">
                 <div class="score-item">
                     <div class="score-label">Score</div>
-                    <div class="score-value">${gameState.score}/${gameState.currentQuestion}</div>
+                    <div class="score-value">${gameState.score}/${
+    gameState.currentQuestion
+  }</div>
                 </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="backToMenu()">← Return to Menu</button>
             </div>
         </div>
         <div class="container">
@@ -293,17 +314,19 @@ function renderGame() {
                 <div class="game-header">
                     <h2 class="game-title">${getGameTitle()}</h2>
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${(gameState.currentQuestion / getGameLength()) * 100}%"></div>
+                        <div class="progress-fill" style="width: ${
+                          (gameState.currentQuestion / getGameLength()) * 100
+                        }%"></div>
                     </div>
                 </div>
                 ${content}
             </div>
         </div>
-    `
+    `;
 }
 
 function renderEmailGame() {
-  const email = emailGames[gameState.currentQuestion]
+  const email = emailGames[gameState.currentQuestion];
   return `
         <div class="email-container">
             <div class="email-header">
@@ -326,11 +349,11 @@ function renderEmailGame() {
                 <button class="btn btn-success btn-large" onclick="answerQuestion(false)">✓ Legitimate</button>
             </div>
         </div>
-    `
+    `;
 }
 
 function renderPhoneGame() {
-  const phone = phoneGames[gameState.currentQuestion]
+  const phone = phoneGames[gameState.currentQuestion];
   return `
         <div class="phone-container">
             <div class="phone-header">
@@ -347,7 +370,7 @@ function renderPhoneGame() {
                   .map(
                     (msg) => `
                     <div class="message ${msg.type}">${msg.text}</div>
-                `,
+                `
                   )
                   .join("")}
             </div>
@@ -359,19 +382,21 @@ function renderPhoneGame() {
                 </div>
             </div>
         </div>
-    `
+    `;
 }
 
 function renderVideoGame() {
-  const video = videoGames[gameState.currentQuestion]
-  const hasVideo = Boolean(video.videoSrc)
+  const video = videoGames[gameState.currentQuestion];
+  const hasVideo = Boolean(video.videoSrc);
   return `
         <div class="video-container">
             <div class="video-display" id="videoDisplay" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
                 ${
                   hasVideo
                     ? `<video class="video-player" controls preload="metadata" playsinline>
-                            <source src="${video.videoSrc}" type="${video.videoType || "video/mp4"}">
+                            <source src="${video.videoSrc}" type="${
+                        video.videoType || "video/mp4"
+                      }">
                             Your browser does not support the video tag.
                        </video>`
                     : `<div class="video-placeholder">${video.emoji}</div>`
@@ -390,32 +415,41 @@ function renderVideoGame() {
                 </div>
             </div>
         </div>
-    `
+    `;
 }
 
 function renderResults() {
-  let currentData = []
-  let isCorrect = false
-  let explanation = ""
+  let currentData = [];
+  let isCorrect = false;
+  let explanation = "";
 
   if (gameState.currentGame === "email") {
-    const email = emailGames[gameState.currentQuestion - 1]
-    currentData = email
-    isCorrect = gameState.answers[gameState.currentQuestion - 1] === email.isPhishing
-    explanation = isCorrect ? "Great job! You correctly identified this email." : "Oops! You missed this one."
+    const email = emailGames[gameState.currentQuestion - 1];
+    currentData = email;
+    isCorrect =
+      gameState.answers[gameState.currentQuestion - 1] === email.isPhishing;
+    explanation = isCorrect
+      ? "Great job! You correctly identified this email."
+      : "Oops! You missed this one.";
   } else if (gameState.currentGame === "phone") {
-    const phone = phoneGames[gameState.currentQuestion - 1]
-    currentData = phone
-    isCorrect = gameState.answers[gameState.currentQuestion - 1] === phone.isPhishing
-    explanation = isCorrect ? "Great job! You correctly identified this call." : "Oops! You missed this one."
+    const phone = phoneGames[gameState.currentQuestion - 1];
+    currentData = phone;
+    isCorrect =
+      gameState.answers[gameState.currentQuestion - 1] === phone.isPhishing;
+    explanation = isCorrect
+      ? "Great job! You correctly identified this call."
+      : "Oops! You missed this one.";
   } else if (gameState.currentGame === "video") {
-    const video = videoGames[gameState.currentQuestion - 1]
-    currentData = video
-    isCorrect = gameState.answers[gameState.currentQuestion - 1] === video.isDeepfake
-    explanation = isCorrect ? "Great job! You correctly identified this video." : "Oops! You missed this one."
+    const video = videoGames[gameState.currentQuestion - 1];
+    currentData = video;
+    isCorrect =
+      gameState.answers[gameState.currentQuestion - 1] === video.isDeepfake;
+    explanation = isCorrect
+      ? "Great job! You correctly identified this video."
+      : "Oops! You missed this one.";
   }
 
-  const isLastQuestion = gameState.currentQuestion >= getGameLength()
+  const isLastQuestion = gameState.currentQuestion >= getGameLength();
 
   return `
         <div class="header">
@@ -423,13 +457,17 @@ function renderResults() {
             <div class="score-display">
                 <div class="score-item">
                     <div class="score-label">Score</div>
-                    <div class="score-value">${gameState.score}/${gameState.currentQuestion}</div>
+                    <div class="score-value">${gameState.score}/${
+    gameState.currentQuestion
+  }</div>
                 </div>
             </div>
         </div>
         <div class="container">
             <div class="results-screen">
-                <h1 class="results-title ${isCorrect ? "results-correct" : "results-incorrect"}">
+                <h1 class="results-title ${
+                  isCorrect ? "results-correct" : "results-incorrect"
+                }">
                     ${isCorrect ? "✓ Correct!" : "✗ Incorrect"}
                 </h1>
                 <p class="results-message">${explanation}</p>
@@ -452,7 +490,7 @@ function renderResults() {
                 </div>
             </div>
         </div>
-    `
+    `;
 }
 
 function renderResultsInfo(data) {
@@ -464,15 +502,22 @@ function renderResultsInfo(data) {
             </div>
             <div class="info-item">
                 <div class="info-label">Status</div>
-                <div class="info-value">${data.isPhishing ? "🚨 Phishing" : "✓ Legitimate"}</div>
+                <div class="info-value">${
+                  data.isPhishing ? "🚨 Phishing" : "✓ Legitimate"
+                }</div>
             </div>
             <div class="info-item">
                 <div class="info-label">Red Flags & Tips</div>
                 <div style="font-size: 0.9rem; line-height: 1.6;">
-                    ${data.hints.map((hint) => `<div style="margin-bottom: 0.5rem;">• ${hint}</div>`).join("")}
+                    ${data.hints
+                      .map(
+                        (hint) =>
+                          `<div style="margin-bottom: 0.5rem;">• ${hint}</div>`
+                      )
+                      .join("")}
                 </div>
             </div>
-        `
+        `;
   } else if (gameState.currentGame === "phone") {
     return `
             <div class="info-item">
@@ -481,15 +526,22 @@ function renderResultsInfo(data) {
             </div>
             <div class="info-item">
                 <div class="info-label">Status</div>
-                <div class="info-value">${data.isPhishing ? "🚨 Scam" : "✓ Legitimate"}</div>
+                <div class="info-value">${
+                  data.isPhishing ? "🚨 Scam" : "✓ Legitimate"
+                }</div>
             </div>
             <div class="info-item">
                 <div class="info-label">Red Flags & Tips</div>
                 <div style="font-size: 0.9rem; line-height: 1.6;">
-                    ${data.hints.map((hint) => `<div style="margin-bottom: 0.5rem;">• ${hint}</div>`).join("")}
+                    ${data.hints
+                      .map(
+                        (hint) =>
+                          `<div style="margin-bottom: 0.5rem;">• ${hint}</div>`
+                      )
+                      .join("")}
                 </div>
             </div>
-        `
+        `;
   } else if (gameState.currentGame === "video") {
     return `
             <div class="info-item">
@@ -498,20 +550,29 @@ function renderResultsInfo(data) {
             </div>
             <div class="info-item">
                 <div class="info-label">Status</div>
-                <div class="info-value">${data.isDeepfake ? "🚨 Deepfake" : "✓ Real"}</div>
+                <div class="info-value">${
+                  data.isDeepfake ? "🚨 Deepfake" : "✓ Real"
+                }</div>
             </div>
             <div class="info-item">
                 <div class="info-label">Detection Tips</div>
                 <div style="font-size: 0.9rem; line-height: 1.6;">
-                    ${data.hints.map((hint) => `<div style="margin-bottom: 0.5rem;">• ${hint}</div>`).join("")}
+                    ${data.hints
+                      .map(
+                        (hint) =>
+                          `<div style="margin-bottom: 0.5rem;">• ${hint}</div>`
+                      )
+                      .join("")}
                 </div>
             </div>
-        `
+        `;
   }
 }
 
 function renderFinalResults() {
-  const accuracy = Math.round((gameState.score / gameState.totalAnswered) * 100)
+  const accuracy = Math.round(
+    (gameState.score / gameState.totalAnswered) * 100
+  );
 
   return `
         <div class="header">
@@ -545,8 +606,8 @@ function renderFinalResults() {
                               accuracy >= 80
                                 ? "🏆 Excellent! You're a security expert!"
                                 : accuracy >= 60
-                                  ? "👍 Good job! Keep practicing."
-                                  : "📚 Keep learning! Try again to improve."
+                                ? "👍 Good job! Keep practicing."
+                                : "📚 Keep learning! Try again to improve."
                             }
                         </div>
                     </div>
@@ -557,105 +618,105 @@ function renderFinalResults() {
                 </div>
             </div>
         </div>
-    `
+    `;
 }
 
 // Game Logic
 function startGame(game) {
-  gameState.currentGame = game
-  gameState.currentScreen = "game"
-  gameState.currentQuestion = 0
-  gameState.score = 0
-  gameState.answers = []
-  gameState.totalAnswered = 0
-  render()
+  gameState.currentGame = game;
+  gameState.currentScreen = "game";
+  gameState.currentQuestion = 0;
+  gameState.score = 0;
+  gameState.answers = [];
+  gameState.totalAnswered = 0;
+  render();
 }
 
 function answerQuestion(answer) {
-  gameState.answers.push(answer)
-  gameState.currentQuestion++
-  gameState.totalAnswered++
+  gameState.answers.push(answer);
+  gameState.currentQuestion++;
+  gameState.totalAnswered++;
 
   // Check if answer is correct
-  let isCorrect = false
+  let isCorrect = false;
   if (gameState.currentGame === "email") {
-    isCorrect = answer === emailGames[gameState.currentQuestion - 1].isPhishing
+    isCorrect = answer === emailGames[gameState.currentQuestion - 1].isPhishing;
   } else if (gameState.currentGame === "phone") {
-    isCorrect = answer === phoneGames[gameState.currentQuestion - 1].isPhishing
+    isCorrect = answer === phoneGames[gameState.currentQuestion - 1].isPhishing;
   } else if (gameState.currentGame === "video") {
-    isCorrect = answer === videoGames[gameState.currentQuestion - 1].isDeepfake
+    isCorrect = answer === videoGames[gameState.currentQuestion - 1].isDeepfake;
   }
 
   if (isCorrect) {
-    gameState.score++
+    gameState.score++;
   }
 
-  gameState.currentScreen = "results"
-  render()
+  gameState.currentScreen = "results";
+  render();
 }
 
 function nextQuestion() {
   if (gameState.currentQuestion >= getGameLength()) {
-    finishGame()
+    finishGame();
   } else {
-    gameState.currentScreen = "game"
-    render()
+    gameState.currentScreen = "game";
+    render();
   }
 }
 
 function finishGame() {
-  gameState.currentScreen = "results"
-  document.getElementById("app").innerHTML = renderFinalResults()
-  attachEventListeners()
+  gameState.currentScreen = "results";
+  document.getElementById("app").innerHTML = renderFinalResults();
+  attachEventListeners();
 }
 
 function backToMenu() {
-  gameState.currentScreen = "menu"
-  gameState.currentGame = null
-  gameState.currentQuestion = 0
-  gameState.score = 0
-  gameState.answers = []
-  gameState.totalAnswered = 0
-  render()
+  gameState.currentScreen = "menu";
+  gameState.currentGame = null;
+  gameState.currentQuestion = 0;
+  gameState.score = 0;
+  gameState.answers = [];
+  gameState.totalAnswered = 0;
+  render();
 }
 
 function getGameTitle() {
-  if (gameState.currentGame === "email") return "📧 Email Phishing Game"
-  if (gameState.currentGame === "phone") return "☎️ Phone Scam Game"
-  if (gameState.currentGame === "video") return "🎥 Deepfake Video Game"
-  return ""
+  if (gameState.currentGame === "email") return "📧 Email Phishing Game";
+  if (gameState.currentGame === "phone") return "☎️ Phone Scam Game";
+  if (gameState.currentGame === "video") return "🎥 Deepfake Video Game";
+  return "";
 }
 
 function getGameLength() {
-  if (gameState.currentGame === "email") return emailGames.length
-  if (gameState.currentGame === "phone") return phoneGames.length
-  if (gameState.currentGame === "video") return videoGames.length
-  return 0
+  if (gameState.currentGame === "email") return emailGames.length;
+  if (gameState.currentGame === "phone") return phoneGames.length;
+  if (gameState.currentGame === "video") return videoGames.length;
+  return 0;
 }
 
 // Touch/Swipe Handling for Video Game
 function handleTouchStart(e) {
-  gameState.touchStartX = e.changedTouches[0].screenX
+  gameState.touchStartX = e.changedTouches[0].screenX;
 }
 
 function handleTouchEnd(e) {
-  gameState.touchEndX = e.changedTouches[0].screenX
-  handleSwipe()
+  gameState.touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
 }
 
 function handleSwipe() {
-  if (gameState.currentGame !== "video") return
+  if (gameState.currentGame !== "video") return;
 
-  const diff = gameState.touchStartX - gameState.touchEndX
-  const threshold = 50
+  const diff = gameState.touchStartX - gameState.touchEndX;
+  const threshold = 50;
 
   if (Math.abs(diff) > threshold) {
     if (diff > 0) {
       // Swiped left - Deepfake
-      answerQuestion(true)
+      answerQuestion(true);
     } else {
       // Swiped right - Real
-      answerQuestion(false)
+      answerQuestion(false);
     }
   }
 }
@@ -666,4 +727,4 @@ function attachEventListeners() {
 }
 
 // Initialize
-render()
+render();
