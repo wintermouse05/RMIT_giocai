@@ -417,6 +417,9 @@ function renderGame() {
                     <div class="score-value">${gameState.score}/${gameState.currentQuestion}</div>
                 </div>
             </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="backToMenu()">← Return to Menu</button>
+            </div>
         </div>
         <div class="container">
             <div class="game-screen">
