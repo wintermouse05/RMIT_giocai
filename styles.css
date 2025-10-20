@@ -335,12 +335,14 @@ body {
 .message.incoming {
   background: rgba(0, 102, 255, 0.2);
   border-left: 3px solid var(--primary);
+  text-align: right;
 }
 
 .message.outgoing {
   background: rgba(16, 185, 129, 0.2);
-  border-left: 3px solid var(--success);
+  border-right: 3px solid var(--success);
   margin-left: 1rem;
+  text-align: left;
 }
 
 /* Video Game */
@@ -598,4 +600,62 @@ body {
   .progress-bar {
     width: 100%;
   }
+}
+
+.lookup-tooltip {
+  position: fixed;
+  background: rgba(20, 20, 20, 0.95);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  display: none;
+  z-index: 9999;
+  width: 240px;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+
+/* Force convo text to not inherit center alignment */
+.phone-container .conversation,
+.phone-container .conversation .message {
+  text-align: left;
+}
+
+/* Use CSS Grid so each bubble can anchor left/right */
+.phone-container .conversation {
+  display: grid;
+  grid-auto-rows: max-content;
+  row-gap: 12px;
+  padding: 8px 0;
+}
+
+/* Bubbles: shrink to content, not full width */
+.phone-container .conversation .message {
+  width: fit-content;
+  max-width: 78%;
+  margin: 0;
+  /* fallback for older engines */
+  width: -moz-fit-content;
+  word-break: break-word;
+}
+
+/* Caller on the left */
+.phone-container .conversation .message.incoming {
+  justify-self: start;   /* left */
+}
+
+/* You on the right */
+.phone-container .conversation .message.outgoing {
+  justify-self: end;     /* right */
+}
+
+/* Optional: make long threads scrollable */
+.phone-container .conversation {
+  max-height: 52vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
